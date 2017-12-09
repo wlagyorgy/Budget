@@ -1,81 +1,96 @@
 package hu.bme.wlassits.budget.fragment;
 
+import android.app.Dialog;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Managers;
 import hu.bme.wlassits.budget.model.Outlay;
 
-import static android.support.v7.widget.RecyclerView.HORIZONTAL;
-
 /**
  * Created by Adam Varga on 12/9/2017.
  */
 
-public class WeeklyOutlaysFragment extends BaseOutlayFragment {
+public class BaseOutlayFragment extends Fragment {
 
-
-    String title;
-    RecyclerView rvWeekly;
-    OutlayAdapter outlayAdapter;
+    Context context;
+    RecyclerView rvDaily;
+    DailyOutlaysFragment.OutlayAdapter outlayAdapter;
     FloatingActionButton fabAddItem;
 
-    public static WeeklyOutlaysFragment newInstance(String title) {
-        WeeklyOutlaysFragment fragmentFirst = new WeeklyOutlaysFragment();
-        Bundle args = new Bundle();
-        args.putString("title", title);
-        fragmentFirst.setArguments(args);
-        return fragmentFirst;
-    }
-
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        title = getArguments().getString("title");
+        context = getActivity();
+    }
+
+    public ArrayList<Outlay> mockOutlays() {
+
+        ArrayList<Outlay> outlays = new ArrayList<>();
+        Outlay outlay;
+
+        for (int i = 0; i < 5; i++) {
+            outlay = new Outlay();
+
+            outlay.setDate(Calendar.getInstance().getTime());
+            outlay.setDescription("2 kiló alma");
+            outlay.setValue(1000);
+            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
+            outlays.add(outlay);
+        }
+        return outlays;
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_weekly, container, false);
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(context, HORIZONTAL);
+    //TODO Gyuri alert dialog.
+    public void createDialog(View view) {
+        final Dialog dialog = new Dialog(view.getContext());
+        dialog.setContentView(R.layout.dialog_outlays);
+        dialog.setCancelable(false);
+        Button newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
+        Button cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
+        final EditText descriptionET = dialog.findViewById(R.id.etOutlayDescription);
+        final EditText priceET = dialog.findViewById(R.id.etOutlayValue);
+        final Spinner type = dialog.findViewById(R.id.spOutlayType);
 
-        rvWeekly = view.findViewById(R.id.rvWeekly);
-        rvWeekly.addItemDecoration(itemDecor);
-        rvWeekly.setLayoutManager(new LinearLayoutManager(context));
 
-        fabAddItem = view.findViewById(R.id.fabAddOutlayWeekly);
-        fabAddItem.setOnClickListener(new View.OnClickListener() {
+        newOutlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                createDialog(view);
+            public void onClick(View v) {
+                Outlay outlay;
+                String description = descriptionET.getText().toString();
+                int value = Integer.parseInt(priceET.getText().toString());
             }
         });
 
 
-        //TODO itt leszűrni a listát, mielőtt átadjuk az adapternek
-        ArrayList<Outlay> listData = mockOutlays();
+        cancelOutlayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
-        outlayAdapter = new OutlayAdapter(listData, context);
-        rvWeekly.setAdapter(outlayAdapter);
-
-        return view;
+        dialog.show();
     }
+
 
 
     public class OutlayAdapter extends RecyclerView.Adapter<OutlayAdapter.OutlayHolder> {
@@ -84,6 +99,7 @@ public class WeeklyOutlaysFragment extends BaseOutlayFragment {
         private LayoutInflater inflater;
 
         OutlayAdapter(ArrayList<Outlay> listData, Context c) {
+
             this.inflater = LayoutInflater.from(c);
             this.listData = listData;
         }
@@ -91,13 +107,7 @@ public class WeeklyOutlaysFragment extends BaseOutlayFragment {
         @Override
         public OutlayHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             final View view = inflater.inflate(R.layout.component_outlay, parent, false);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO Ide bekötni, hogy mi történjen, ha rmegyünk egy elemre
-                    Toast.makeText(context, "Valami történik majd ezzel", Toast.LENGTH_LONG).show();
-                }
-            });
+
             return new OutlayHolder(view);
         }
 
@@ -135,6 +145,14 @@ public class WeeklyOutlaysFragment extends BaseOutlayFragment {
             }
         }
     }
+
+
+
+    public void setData( ArrayList<Outlay> listData){
+        outlayAdapter = new OutlayAdapter(listData, context);
+        rvDaily.setAdapter(outlayAdapter);
+    }
+
 
 
 }

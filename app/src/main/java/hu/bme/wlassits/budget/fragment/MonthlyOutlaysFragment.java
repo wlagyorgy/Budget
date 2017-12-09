@@ -2,7 +2,7 @@ package hu.bme.wlassits.budget.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Managers;
@@ -26,13 +25,13 @@ import static android.support.v7.widget.RecyclerView.HORIZONTAL;
  * Created by Adam Varga on 12/9/2017.
  */
 
-public class MonthlyOutlaysFragment extends Fragment {
+public class MonthlyOutlaysFragment extends BaseOutlayFragment {
 
 
     String title;
     RecyclerView rvMonthly;
     OutlayAdapter outlayAdapter;
-    Context context;
+    FloatingActionButton fabAddItem;
 
     public static MonthlyOutlaysFragment newInstance(String title) {
         MonthlyOutlaysFragment fragmentFirst = new MonthlyOutlaysFragment();
@@ -47,7 +46,7 @@ public class MonthlyOutlaysFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         title = getArguments().getString("title");
-        context = getContext();
+
     }
 
 
@@ -56,16 +55,24 @@ public class MonthlyOutlaysFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_monthly, container, false);
 
-        DividerItemDecoration itemDecor = new DividerItemDecoration(getContext(), HORIZONTAL);
+        fabAddItem = view.findViewById(R.id.fabAddOutlayMonthly);
+        fabAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createDialog(view);
+            }
+        });
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(context, HORIZONTAL);
 
         rvMonthly = view.findViewById(R.id.rvMonthly);
         rvMonthly.addItemDecoration(itemDecor);
-        rvMonthly.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvMonthly.setLayoutManager(new LinearLayoutManager(context));
 
         //TODO itt leszűrni a listát, mielőtt átadjuk az adapternek
         ArrayList<Outlay> listData = mockOutlays();
 
-        outlayAdapter = new OutlayAdapter(listData, getContext());
+        outlayAdapter = new OutlayAdapter(listData, context);
         rvMonthly.setAdapter(outlayAdapter);
 
         return view;
@@ -89,6 +96,7 @@ public class MonthlyOutlaysFragment extends Fragment {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     //TODO Ide bekötni, hogy mi történjen, ha rmegyünk egy elemre
                     Toast.makeText(context, "Valami történik majd ezzel", Toast.LENGTH_LONG).show();
                 }
@@ -132,22 +140,6 @@ public class MonthlyOutlaysFragment extends Fragment {
     }
 
 
-    public ArrayList<Outlay> mockOutlays() {
-
-        ArrayList<Outlay> outlays = new ArrayList<>();
-        Outlay outlay;
-
-        for (int i = 0; i < 5; i++) {
-            outlay = new Outlay();
-
-            outlay.setDate(Calendar.getInstance().getTime());
-            outlay.setDescription("2 kiló alma");
-            outlay.setValue(1000);
-            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
-            outlays.add(outlay);
-        }
-        return outlays;
-    }
 
 
 }
