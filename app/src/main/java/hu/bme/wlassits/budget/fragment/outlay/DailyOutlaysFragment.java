@@ -16,6 +16,9 @@ public class DailyOutlaysFragment extends BaseOutlayFragment {
         return new DailyOutlaysFragment();
     }
 
+
+
+
     @Override
     public void setData(ArrayList<Outlay> listData) {
         //TODO kiszűrni a csak napi adatokat
