@@ -1,9 +1,6 @@
 package hu.bme.wlassits.budget.fragment.outlay;
 
 import android.app.Dialog;
-import android.graphics.drawable.Drawable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,22 +17,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import hu.bme.wlassits.budget.model.Globals;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Managers;
+import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Outlay;
 
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
-
 import static hu.bme.wlassits.budget.model.Globals.outlays;
 
-/**
- * Created by Adam Varga on 12/9/2017.
- */
 
 public class BaseOutlayFragment extends Fragment {
 
@@ -43,6 +36,11 @@ public class BaseOutlayFragment extends Fragment {
     RecyclerView rvContent;
     OutlayAdapter outlayAdapter;
     FloatingActionButton fabAddItem;
+    Button newOutlayBtn;
+    Button cancelOutlayBtn;
+    EditText descriptionET;
+    EditText valueET;
+    Spinner type;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,47 +48,24 @@ public class BaseOutlayFragment extends Fragment {
         context = getActivity();
     }
 
-    public ArrayList<Outlay> mockOutlays() {
-
-        ArrayList<Outlay> outlays = new ArrayList<>();
-        Outlay outlay;
-
-        for (int i = 0; i < 5; i++) {
-            outlay = new Outlay();
-
-            outlay.setDate(Calendar.getInstance().getTime());
-            outlay.setDescription("Napi bevásárlás");
-            outlay.setValue(i*1000);
-            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
-            outlays.add(outlay);
-        }
-        return outlays;
-    }
-
-
 
     //TODO Gyuri alert dialog.
     public void createDialog(View view) {
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_outlays);
         dialog.setCancelable(false);
-        Button newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
-        Button cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
-        final EditText descriptionET = dialog.findViewById(R.id.etOutlayDescription);
-        final EditText valueET = dialog.findViewById(R.id.etOutlayValue);
-        final Spinner type = dialog.findViewById(R.id.spOutlayType);
+        newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
+        cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
+        descriptionET = dialog.findViewById(R.id.etOutlayDescription);
+        valueET = dialog.findViewById(R.id.etOutlayValue);
+        type = dialog.findViewById(R.id.spOutlayType);
 
 
         newOutlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Outlay outlay = new Outlay();
-                outlay.setDescription( descriptionET.getText().toString());
-                outlay.setValue(Integer.parseInt(valueET.getText().toString()));
-                String drawableId = type.getSelectedItem().toString();
-                int img = getResources().getIdentifier(drawableId,"drawable",context.getPackageName());
-                outlay.setImg(getResources().getDrawable(img));
-                outlays.add(outlay);
+                addNewOutlay();
+                dialog.dismiss();
             }
         });
 
@@ -105,6 +80,19 @@ public class BaseOutlayFragment extends Fragment {
         dialog.show();
     }
 
+    public void addNewOutlay() {
+        Outlay outlay = new Outlay();
+        outlay.setDate(Calendar.getInstance().getTime());
+        outlay.setDescription(descriptionET.getText().toString());
+        outlay.setValue(Integer.parseInt(valueET.getText().toString()));
+        String drawableId = type.getSelectedItem().toString().toLowerCase();
+        int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
+
+        outlay.setImg(getResources().getDrawable(imgId));
+        outlays.add(outlay);
+
+        //TODO SaveData to preferences
+    }
 
 
     public class OutlayAdapter extends RecyclerView.Adapter<OutlayAdapter.OutlayHolder> {
@@ -150,14 +138,24 @@ public class BaseOutlayFragment extends Fragment {
 
             OutlayHolder(View itemView) {
                 super(itemView);
-
                 ivIcon = itemView.findViewById(R.id.ivIcon);
                 tvDescription = itemView.findViewById(R.id.tvDescription);
                 tvDate = itemView.findViewById(R.id.tvDate);
                 tvValue = itemView.findViewById(R.id.tvValue);
-                //   container = itemView.findViewById(R.id.notification_item_root);
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        handleOutlayItem(getAdapterPosition());
+                    }
+                });
             }
         }
+    }
+
+    //TODO Ehhez létrehozni layoutot illetve betölteni bele az adatokat, hogy lehessen baszogatni.
+    public void handleOutlayItem(int pos){
+
     }
 
 
@@ -187,9 +185,7 @@ public class BaseOutlayFragment extends Fragment {
             }
         });
 
-
-        ArrayList<Outlay> listData = mockOutlays();
-        setData(listData);
+        setData(Globals.outlays);
 
         return view;
     }

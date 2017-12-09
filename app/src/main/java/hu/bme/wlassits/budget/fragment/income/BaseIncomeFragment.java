@@ -20,10 +20,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Managers;
+import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Income;
 import hu.bme.wlassits.budget.model.Outlay;
 
@@ -44,23 +44,6 @@ public class BaseIncomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-    }
-
-    public ArrayList<Income> mockOutlays() {
-
-        ArrayList<Income> incomes = new ArrayList<>();
-        Income income;
-
-        for (int i = 0; i < 5; i++) {
-            income = new Income();
-
-            income.setDate(Calendar.getInstance().getTime());
-            income.setDescription("Napi kereset");
-            income.setValue(i * 5000);
-            income.setImg(getResources().getDrawable(R.drawable.icon_money));
-            incomes.add(income);
-        }
-        return incomes;
     }
 
 
@@ -179,8 +162,7 @@ public class BaseIncomeFragment extends Fragment {
         });
 
 
-        ArrayList<Income> listData = mockOutlays();
-        setData(listData);
+        setData(Globals.incomes);
 
         return view;
     }

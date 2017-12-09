@@ -95,7 +95,11 @@ public class DashboardActivity extends BaseActivity {
 
 
 
-    //TODO Betölteni előre az összes kiadást és bevételt, ezt tárolni a Globalsban pl.
+    //TODO Betölteni előre az összes kiadást és bevételt, ezt tárolni a Globalsban (Sharedpreferencesből).
+
+
+
+
 
 
 
