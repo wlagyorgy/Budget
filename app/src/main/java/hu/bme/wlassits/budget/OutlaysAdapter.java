@@ -1,4 +1,4 @@
-package com.example.wlassits.budget;
+package hu.bme.wlassits.budget;
 
 /**
  * Created by wlassits on 2017. 12. 03..

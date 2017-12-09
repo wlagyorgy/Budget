@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Budget</string>
+    <string name="facebook_app_id">401084066987967</string>
+    <string name="fb_login_protocol_scheme">fb401084066987967</string>
 </resources>

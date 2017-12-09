@@ -1,4 +1,4 @@
-package com.example.wlassits.budget;
+package hu.bme.wlassits.budget;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

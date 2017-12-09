@@ -1,4 +1,4 @@
-package com.example.wlassits.budget;
+package hu.bme.wlassits.budget;
 
 import org.junit.Test;
 
