@@ -1,4 +1,4 @@
-package hu.bme.wlassits.budget;
+package hu.bme.wlassits.budget.fragment;
 
 /**
  * Created by wlassits on 2017. 12. 03..
@@ -12,8 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import hu.bme.wlassits.budget.R;
+
 public class OutlaysActivity extends AppCompatActivity {
-/*    @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.outlay_main);
@@ -27,8 +29,9 @@ public class OutlaysActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = //new PagerAdapter (getSupportFragmentManager(), tabLayout.getTabCount());
-      //  viewPager.setAdapter(adapter);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -62,5 +65,5 @@ public class OutlaysActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }

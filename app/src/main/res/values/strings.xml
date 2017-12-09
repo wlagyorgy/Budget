@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Budget</string>
-    <string name="facebook_app_id">401084066987967</string>
-    <string name="fb_login_protocol_scheme">fb401084066987967</string>
+    <string name="outlay_daily">Daily Outlays</string>
+    <string name="outlay_weekly">Weekly Outlays</string>
+    <string name="outlay_monthly">Monthly Outlays</string>
+    <string name="asd">Page # 2</string>
 </resources>
