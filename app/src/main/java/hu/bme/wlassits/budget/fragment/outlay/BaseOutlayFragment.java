@@ -1,6 +1,9 @@
 package hu.bme.wlassits.budget.fragment.outlay;
 
 import android.app.Dialog;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import hu.bme.wlassits.budget.model.Globals;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +31,11 @@ import hu.bme.wlassits.budget.model.Outlay;
 
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
 
+import static hu.bme.wlassits.budget.model.Globals.outlays;
+
+/**
+ * Created by Adam Varga on 12/9/2017.
+ */
 
 public class BaseOutlayFragment extends Fragment {
 
@@ -59,6 +68,7 @@ public class BaseOutlayFragment extends Fragment {
     }
 
 
+
     //TODO Gyuri alert dialog.
     public void createDialog(View view) {
         final Dialog dialog = new Dialog(view.getContext());
@@ -67,16 +77,20 @@ public class BaseOutlayFragment extends Fragment {
         Button newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
         Button cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
         final EditText descriptionET = dialog.findViewById(R.id.etOutlayDescription);
-        final EditText priceET = dialog.findViewById(R.id.etOutlayValue);
+        final EditText valueET = dialog.findViewById(R.id.etOutlayValue);
         final Spinner type = dialog.findViewById(R.id.spOutlayType);
 
 
         newOutlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Outlay outlay;
-                String description = descriptionET.getText().toString();
-                int value = Integer.parseInt(priceET.getText().toString());
+                Outlay outlay = new Outlay();
+                outlay.setDescription( descriptionET.getText().toString());
+                outlay.setValue(Integer.parseInt(valueET.getText().toString()));
+                String drawableId = type.getSelectedItem().toString();
+                int img = getResources().getIdentifier(drawableId,"drawable",context.getPackageName());
+                outlay.setImg(getResources().getDrawable(img));
+                outlays.add(outlay);
             }
         });
 
@@ -90,6 +104,7 @@ public class BaseOutlayFragment extends Fragment {
 
         dialog.show();
     }
+
 
 
     public class OutlayAdapter extends RecyclerView.Adapter<OutlayAdapter.OutlayHolder> {

@@ -12,6 +12,15 @@ public class Income {
     private int value;
     private Date date;
     private Drawable img;
+    private IncomeType type;
+
+    public IncomeType getType() {
+        return type;
+    }
+
+    public void setType(IncomeType type) {
+        this.type = type;
+    }
 
     public Income(int id, String description, int value, Date date, Drawable img) {
         this.id = id;

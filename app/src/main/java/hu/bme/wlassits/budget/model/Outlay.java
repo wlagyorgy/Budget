@@ -12,6 +12,15 @@ public class Outlay {
     private int value;
     private Date date;
     private Drawable img;
+    private OutlayType type;
+
+    public OutlayType getType() {
+        return type;
+    }
+
+    public void setType(OutlayType type) {
+        this.type = type;
+    }
 
     public int getId() {
         return id;

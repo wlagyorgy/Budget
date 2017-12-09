@@ -3,17 +3,15 @@
     <string name="outlay_daily">Daily Outlays</string>
     <string name="outlay_weekly">Weekly Outlays</string>
     <string name="outlay_monthly">Monthly Outlays</string>
-    <string name="asd">Page # 2</string>
 
-        <string-array name="outlay_types">
-            <item>Clothes</item>
-            <item>Food/Grocery</item>
-            <item>Travel</item>
-            <item>House</item>
-            <item>Car</item>
-            <item>Party</item>
+    <string-array name="outlaytypes">
+        <item>Clothes</item>
+        <item>Food</item>
+        <item>House</item>
+        <item>Car</item>
+        <item>Freetime</item>
+    </string-array>
 
-        </string-array>
     <string name="facebook_app_id">401084066987967</string>
     <string name="fb_login_protocol_scheme">fb401084066987967</string>
     <string name="outlayitemicon">OutlayItemIcon</string>
