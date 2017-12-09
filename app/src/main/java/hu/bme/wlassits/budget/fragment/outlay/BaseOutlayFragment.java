@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
-import hu.bme.wlassits.budget.managers.Managers;
+import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Outlay;
 
@@ -118,7 +119,7 @@ public class BaseOutlayFragment extends Fragment {
             Outlay item = listData.get(position);
 
             holder.tvDescription.setText(item.getDescription());
-            holder.tvDate.setText(Managers.dailyDateFormat.format(item.getDate()));
+            holder.tvDate.setText(Formatters.dailyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
             holder.ivIcon.setImageDrawable(item.getImg());
         }
@@ -154,8 +155,8 @@ public class BaseOutlayFragment extends Fragment {
     }
 
     //TODO Ehhez létrehozni layoutot illetve betölteni bele az adatokat, hogy lehessen baszogatni.
-    public void handleOutlayItem(int pos){
-
+    public void handleOutlayItem(int pos) {
+        Log.e("Selected item:", outlays.get(pos).toString());
     }
 
 

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import java.util.Date;
 
 
-
 public class Outlay {
     private int id;
     private String description;
@@ -60,5 +59,18 @@ public class Outlay {
 
     public void setImg(Drawable img) {
         this.img = img;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Outlay{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", value=" + value +
+                ", date=" + date +
+                ", img=" + img +
+                ", type=" + type +
+                '}';
     }
 }

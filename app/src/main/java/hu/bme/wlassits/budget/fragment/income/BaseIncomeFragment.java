@@ -22,7 +22,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import hu.bme.wlassits.budget.R;
-import hu.bme.wlassits.budget.managers.Managers;
+import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Income;
 import hu.bme.wlassits.budget.model.Outlay;
@@ -104,7 +104,7 @@ public class BaseIncomeFragment extends Fragment {
             Income item = listData.get(position);
 
             holder.tvDescription.setText(item.getDescription());
-            holder.tvDate.setText(Managers.dailyDateFormat.format(item.getDate()));
+            holder.tvDate.setText(Formatters.dailyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
             holder.ivIcon.setImageDrawable(item.getImg());
         }
