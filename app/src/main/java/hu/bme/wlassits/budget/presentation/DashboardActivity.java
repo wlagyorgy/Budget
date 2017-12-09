@@ -16,8 +16,11 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
+import java.util.Calendar;
+
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
+import hu.bme.wlassits.budget.model.Outlay;
 
 @SuppressLint("Registered")
 public class DashboardActivity extends BaseActivity {
@@ -43,6 +46,7 @@ public class DashboardActivity extends BaseActivity {
       //  tvName.setText(Globals.user.getFirst_name());
 
         setUpButtons(this);
+        fillOutlaysWithMockData();
     }
 
 
@@ -98,6 +102,26 @@ public class DashboardActivity extends BaseActivity {
     //TODO Betölteni előre az összes kiadást és bevételt, ezt tárolni a Globalsban (Sharedpreferencesből).
 
 
+
+    //TODO mockol adatok
+
+
+    public void fillOutlaysWithMockData(){
+        Calendar cal = Calendar.getInstance();
+
+        Outlay outlay;
+        for (int i= 0; i< 50;i++){
+            cal.add(Calendar.DAY_OF_YEAR,-i);
+
+            outlay = new Outlay();
+
+            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
+            outlay.setValue(i*500);
+            outlay.setDescription(i+". napi recskazsepi");
+            outlay.setDate(cal.getTime());
+            Globals.outlays.add(outlay);
+        }
+    }
 
 
 
