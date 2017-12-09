@@ -2,18 +2,18 @@ package hu.bme.wlassits.budget.model;
 
 
 
-class User {
-    private String name;
+public class User {
+    private String first_name;
 
-    User(String name) {
-        this.name = name;
+    public User(String name) {
+        this.first_name = name;
     }
 
-    public String getName() {
-        return name;
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
     }
 }

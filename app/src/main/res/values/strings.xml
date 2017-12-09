@@ -6,4 +6,6 @@
     <string name="asd">Page # 2</string>
     <string name="facebook_app_id">401084066987967</string>
     <string name="fb_login_protocol_scheme">fb401084066987967</string>
+    <string name="outlayitemicon">OutlayItemIcon</string>
+    <string name="outlays">OUTLAYS</string>
 </resources>
