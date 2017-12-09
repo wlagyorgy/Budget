@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import com.facebook.AccessToken;
+
 import hu.bme.wlassits.budget.R;
 
 @SuppressLint("Registered")
@@ -73,6 +75,7 @@ public class DashboardActivity extends BaseActivity {
 
     private void exitApplication() {
 
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
 
     }
 }
