@@ -1,6 +1,5 @@
 package hu.bme.wlassits.budget.presentation;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,16 +7,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import hu.bme.wlassits.budget.R;
-import hu.bme.wlassits.budget.fragment.DailyOutlaysFragment;
-import hu.bme.wlassits.budget.fragment.MonthlyOutlaysFragment;
-import hu.bme.wlassits.budget.fragment.WeeklyOutlaysFragment;
-import hu.bme.wlassits.budget.model.Outlay;
+import hu.bme.wlassits.budget.fragment.outlay.DailyOutlaysFragment;
+import hu.bme.wlassits.budget.fragment.outlay.MonthlyOutlaysFragment;
+import hu.bme.wlassits.budget.fragment.outlay.WeeklyOutlaysFragment;
 
 
 public class OutlaysActivity extends BaseActivity {
@@ -55,11 +49,11 @@ public class OutlaysActivity extends BaseActivity {
         public android.support.v4.app.Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return DailyOutlaysFragment.newInstance("Daily outlays");
+                    return DailyOutlaysFragment.createFragment();
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return WeeklyOutlaysFragment.newInstance("Weekly outlays");
+                    return WeeklyOutlaysFragment.createFragment();
                 case 2: // Fragment # 1 - This will show SecondFragment
-                    return MonthlyOutlaysFragment.newInstance("Monthly outlays");
+                    return MonthlyOutlaysFragment.createFragment();
                 default:
                     return null;
             }

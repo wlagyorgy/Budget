@@ -18,4 +18,5 @@
     <string name="fb_login_protocol_scheme">fb401084066987967</string>
     <string name="outlayitemicon">OutlayItemIcon</string>
     <string name="outlays">OUTLAYS</string>
+    <string name="incomes">INCOMES</string>
 </resources>

@@ -1,11 +1,13 @@
-package hu.bme.wlassits.budget.fragment;
+package hu.bme.wlassits.budget.fragment.outlay;
 
 import android.app.Dialog;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,15 +25,14 @@ import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Managers;
 import hu.bme.wlassits.budget.model.Outlay;
 
-/**
- * Created by Adam Varga on 12/9/2017.
- */
+import static android.support.v7.widget.RecyclerView.HORIZONTAL;
+
 
 public class BaseOutlayFragment extends Fragment {
 
     Context context;
-    RecyclerView rvDaily;
-    DailyOutlaysFragment.OutlayAdapter outlayAdapter;
+    RecyclerView rvContent;
+    OutlayAdapter outlayAdapter;
     FloatingActionButton fabAddItem;
 
     @Override
@@ -49,14 +50,13 @@ public class BaseOutlayFragment extends Fragment {
             outlay = new Outlay();
 
             outlay.setDate(Calendar.getInstance().getTime());
-            outlay.setDescription("2 kiló alma");
-            outlay.setValue(1000);
+            outlay.setDescription("Napi bevásárlás");
+            outlay.setValue(i*1000);
             outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
             outlays.add(outlay);
         }
         return outlays;
     }
-
 
 
     //TODO Gyuri alert dialog.
@@ -90,7 +90,6 @@ public class BaseOutlayFragment extends Fragment {
 
         dialog.show();
     }
-
 
 
     public class OutlayAdapter extends RecyclerView.Adapter<OutlayAdapter.OutlayHolder> {
@@ -147,12 +146,38 @@ public class BaseOutlayFragment extends Fragment {
     }
 
 
-
-    public void setData( ArrayList<Outlay> listData){
+    public void setData(ArrayList<Outlay> listData) {
         outlayAdapter = new OutlayAdapter(listData, context);
-        rvDaily.setAdapter(outlayAdapter);
+        rvContent.setAdapter(outlayAdapter);
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_outlays, container, false);
+
+        DividerItemDecoration itemDecor = new DividerItemDecoration(context, HORIZONTAL);
+
+        rvContent = view.findViewById(R.id.rvContent);
+        rvContent.addItemDecoration(itemDecor);
+        rvContent.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+
+        fabAddItem = view.findViewById(R.id.fabAddOutlayItem);
+        fabAddItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createDialog(view);
+            }
+        });
+
+
+        ArrayList<Outlay> listData = mockOutlays();
+        setData(listData);
+
+        return view;
+    }
 
 
 }

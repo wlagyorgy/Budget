@@ -21,6 +21,10 @@ public class Income {
         this.img = img;
     }
 
+
+    public Income() {
+    }
+
     public int getId() {
         return id;
     }
