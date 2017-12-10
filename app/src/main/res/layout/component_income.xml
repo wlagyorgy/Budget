@@ -15,7 +15,7 @@
         android:layout_margin="3dp"
         tools:src="@drawable/app_logo"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/outlayitemicon" />
+        android:contentDescription="@string/incomeitemicon" />
 
     <RelativeLayout
         android:layout_width="wrap_content"

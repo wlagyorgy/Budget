@@ -144,7 +144,7 @@ public class BaseIncomeFragment extends Fragment {
         Globals.incomes.add(income);
         IncomeAdapter.notifyDataSetChanged();
 
-        SaveIncomeToDatabase(income);
+        saveIncomeToDatabase(income);
     }
 
 
