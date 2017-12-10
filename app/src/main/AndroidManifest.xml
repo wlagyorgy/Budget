@@ -42,7 +42,7 @@
             android:name=".presentation.IncomesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".presentation.StatisticsActivity"
+            android:name=".presentation.statistics.StatisticsActivity"
             android:screenOrientation="portrait" />
 
 

@@ -1,4 +1,4 @@
-package hu.bme.wlassits.budget.presentation;
+package hu.bme.wlassits.budget.presentation.statistics;
 
 /**
  * Created by Adam Varga on 12/10/2017.

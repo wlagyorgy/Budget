@@ -11,7 +11,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
 @SuppressLint("Registered")
-class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
 
     @Override

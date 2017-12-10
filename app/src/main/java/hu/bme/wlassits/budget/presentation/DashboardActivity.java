@@ -13,11 +13,9 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
-import java.util.Calendar;
-
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
-import hu.bme.wlassits.budget.model.Outlay;
+import hu.bme.wlassits.budget.presentation.statistics.StatisticsActivity;
 
 import static hu.bme.wlassits.budget.repository.DbHelper.getOutlayDataFromDb;
 import static hu.bme.wlassits.budget.repository.DbHelper.initDb;

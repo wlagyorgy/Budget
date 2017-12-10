@@ -1,10 +1,11 @@
-package hu.bme.wlassits.budget.presentation;
+package hu.bme.wlassits.budget.presentation.statistics;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import hu.bme.wlassits.budget.R;
+import hu.bme.wlassits.budget.presentation.BaseActivity;
 
 import static hu.bme.wlassits.budget.model.Globals.incomes;
 import static hu.bme.wlassits.budget.model.Globals.outlays;
