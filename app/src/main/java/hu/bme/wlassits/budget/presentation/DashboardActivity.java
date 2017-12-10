@@ -1,13 +1,10 @@
 package hu.bme.wlassits.budget.presentation;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +19,10 @@ import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Outlay;
 
+import static hu.bme.wlassits.budget.repository.DbHelper.getOutlayDataFromDb;
+import static hu.bme.wlassits.budget.repository.DbHelper.initDb;
 
-//TODO Gyuri 0. > Firebase regisztráció + api elhelyezése [https://firebase.google.com/]
+
 @SuppressLint("Registered")
 public class DashboardActivity extends BaseActivity {
 
@@ -44,11 +43,12 @@ public class DashboardActivity extends BaseActivity {
         btnStatistics = findViewById(R.id.btnStatistics);
         btnExit = findViewById(R.id.btnExit);
         tvName = findViewById(R.id.tvName);
-
-      //  tvName.setText(Globals.user.getFirst_name());
+        tvName.setText(Globals.user.getFirst_name());
 
         setUpButtons(this);
-        fillOutlaysWithMockData();
+
+        initDb();
+        getOutlayDataFromDb();
     }
 
 
@@ -87,8 +87,6 @@ public class DashboardActivity extends BaseActivity {
                 exitApplication();
             }
         });
-
-
     }
 
     private void exitApplication() {
@@ -97,33 +95,4 @@ public class DashboardActivity extends BaseActivity {
         LoginManager.getInstance().logOut();
         AccessToken.setCurrentAccessToken(null);
     }
-
-
-
-
-    //TODO Zsömi > getData from DB [https://firebase.google.com/docs/database/android/read-and-write]
-
-
-    //TODO Zsömi > Vigyázz! mockolt adatok
-    public void fillOutlaysWithMockData(){
-        Calendar cal = Calendar.getInstance();
-
-        Outlay outlay;
-        for (int i= 0; i< 50;i++){
-            cal.add(Calendar.DATE,-1);
-
-            outlay = new Outlay();
-
-            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
-            outlay.setValue(i*500);
-            outlay.setDescription(i+". napi rántottsajt");
-            outlay.setDate(cal.getTime());
-            Globals.outlays.add(outlay);
-        }
-    }
-
-
-
-
-
 }

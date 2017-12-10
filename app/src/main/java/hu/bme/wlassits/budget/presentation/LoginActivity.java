@@ -3,7 +3,6 @@ package hu.bme.wlassits.budget.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.transition.Visibility;
 import android.util.Log;
 import android.view.View;
 
@@ -13,9 +12,11 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,8 +39,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.e(TAG, "onCreate()");
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        Globals.user = new User();
         btnFacebookLogin = findViewById(R.id.btnFacebookLogin);
         btnFacebookLogin.setVisibility(View.VISIBLE);
 
@@ -62,10 +63,16 @@ public class LoginActivity extends BaseActivity {
                                     Log.d("JSON", "" + response.getJSONObject().toString());
 
                                     try {
+
                                         String name = object.getString("name");
                                         String first_name = object.optString("first_name");
                                         String last_name = object.optString("last_name");
-                                        Globals.user = new User(first_name);
+                                        String facebookId = object.getString("id");
+
+                                        Globals.user.setFirst_name(first_name);
+                                        Globals.user.setFacebookIdentifier(facebookId);
+
+
                                         btnFacebookLogin.setVisibility(View.GONE);
                                         navigateToDashboard();
 
@@ -121,12 +128,13 @@ public class LoginActivity extends BaseActivity {
 
     private boolean isLoggedIn() {
         //check login
+        Profile profile = Profile.getCurrentProfile();
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         if (accessToken == null) {
-            Log.d(TAG, ">>>" + "Signed Out");
             return false;
         } else {
-            Log.d(TAG, ">>>" + "Signed In");
+            Globals.user.setFacebookIdentifier(profile.getId());
+            Globals.user.setFirst_name(profile.getFirstName());
             return true;
         }
     }
