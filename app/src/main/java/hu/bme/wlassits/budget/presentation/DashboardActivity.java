@@ -101,7 +101,7 @@ public class DashboardActivity extends BaseActivity {
 
 
 
-    //TODO Zsömi > getData from DB
+    //TODO Zsömi > getData from DB [https://firebase.google.com/docs/database/android/read-and-write]
 
 
     //TODO Zsömi > Vigyázz! mockolt adatok
@@ -110,7 +110,7 @@ public class DashboardActivity extends BaseActivity {
 
         Outlay outlay;
         for (int i= 0; i< 50;i++){
-            cal.add(Calendar.DAY_OF_YEAR,-i);
+            cal.add(Calendar.DATE,-1);
 
             outlay = new Outlay();
 

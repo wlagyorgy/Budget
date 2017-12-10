@@ -3,6 +3,7 @@ package hu.bme.wlassits.budget.fragment.outlay;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Outlay;
 
 /**
@@ -34,6 +35,7 @@ public class MonthlyOutlaysFragment extends BaseOutlayFragment {
         }
         return thisMonthsOutlays;
     }
+
 
     private boolean isOutlayThisMonth(Outlay o) {
         Calendar cal = Calendar.getInstance();

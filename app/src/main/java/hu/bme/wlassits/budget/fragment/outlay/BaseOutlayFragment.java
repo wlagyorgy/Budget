@@ -31,7 +31,7 @@ import hu.bme.wlassits.budget.model.Outlay;
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
 import static hu.bme.wlassits.budget.model.Globals.outlays;
 
-
+//TODO Gyuri 5. > Tesztelni mindent, hogy működik-e
 public class BaseOutlayFragment extends Fragment {
 
     Context context;
@@ -120,7 +120,7 @@ public class BaseOutlayFragment extends Fragment {
             Outlay item = listData.get(position);
 
             holder.tvDescription.setText(item.getDescription());
-            holder.tvDate.setText(Formatters.dailyDateFormat.format(item.getDate()));
+            holder.tvDate.setText(Formatters.monthlyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
             holder.ivIcon.setImageDrawable(item.getImg());
             holder.rlOutlayComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
@@ -133,6 +133,7 @@ public class BaseOutlayFragment extends Fragment {
         }
 
         @Override
+
         public int getItemCount() {
             return listData.size();
         }

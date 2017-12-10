@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:gravity="center">
 
-
+    <!-- TODO Gyuri 7.> layout megtervezése, miket akarsz rajta mutatni-->
+    <!-- TODO Gyuri 7.> pl 2 textview > income és outlay , chartokkal még ne törődj-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
