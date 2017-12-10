@@ -22,6 +22,8 @@ import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Outlay;
 
+
+//TODO Gyuri 0. > Firebase regisztráció + api elhelyezése [https://firebase.google.com/]
 @SuppressLint("Registered")
 public class DashboardActivity extends BaseActivity {
 
@@ -99,13 +101,10 @@ public class DashboardActivity extends BaseActivity {
 
 
 
-    //TODO Betölteni előre az összes kiadást és bevételt, ezt tárolni a Globalsban (Sharedpreferencesből).
+    //TODO Zsömi > getData from DB
 
 
-
-    //TODO mockol adatok
-
-
+    //TODO Zsömi > Vigyázz! mockolt adatok
     public void fillOutlaysWithMockData(){
         Calendar cal = Calendar.getInstance();
 
@@ -117,7 +116,7 @@ public class DashboardActivity extends BaseActivity {
 
             outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
             outlay.setValue(i*500);
-            outlay.setDescription(i+". napi recskazsepi");
+            outlay.setDescription(i+". napi rántottsajt");
             outlay.setDate(cal.getTime());
             Globals.outlays.add(outlay);
         }

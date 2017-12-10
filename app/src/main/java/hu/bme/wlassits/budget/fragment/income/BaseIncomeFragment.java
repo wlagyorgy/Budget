@@ -33,6 +33,9 @@ import static android.support.v7.widget.RecyclerView.HORIZONTAL;
  * Created by Adam Varga on 12/9/2017.
  */
 
+
+//TODO Gyuri 6. >  áthozni a BaseOutlayFragment-ből mindent, és Incommal megcsinálni
+
 public class BaseIncomeFragment extends Fragment {
 
     Context context;
@@ -47,7 +50,6 @@ public class BaseIncomeFragment extends Fragment {
     }
 
 
-    //TODO Gyuri alert dialog.
     public void createDialog(View view) {
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_outlays);

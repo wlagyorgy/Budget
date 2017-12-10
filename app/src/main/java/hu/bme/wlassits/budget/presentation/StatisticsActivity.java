@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import hu.bme.wlassits.budget.R;
 
-//TODO Statisztika hozzáadása [https://github.com/PhilJay/MPAndroidChart]
+//TODO Gyuri 5. Statisztika hozzáadása [https://github.com/PhilJay/MPAndroidChart]
 public class StatisticsActivity extends BaseActivity {
 
     @Override

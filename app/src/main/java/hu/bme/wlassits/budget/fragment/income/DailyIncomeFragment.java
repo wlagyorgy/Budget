@@ -20,7 +20,6 @@ public class DailyIncomeFragment extends BaseIncomeFragment {
 
     @Override
     public void setData(ArrayList<Income> listData) {
-        //TODO kiszűrni a csak napi adatokat
         incomeAdapter = new BaseIncomeFragment.IncomeAdapter(listData, context);
         rvContent.setAdapter(incomeAdapter);
     }

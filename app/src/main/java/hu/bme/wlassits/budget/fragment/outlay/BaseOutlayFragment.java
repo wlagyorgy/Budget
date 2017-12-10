@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class BaseOutlayFragment extends Fragment {
     }
 
 
-    //TODO Gyuri alert dialog.
+    //TODO Gyuri 2. >  createDialog(View view) >>  csekkolni, hogy működik-é illetve mezők validálása (pl. nem üres meg ami még eszedbe jut)
     public void createDialog(View view) {
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_outlays);
@@ -92,7 +93,7 @@ public class BaseOutlayFragment extends Fragment {
         outlay.setImg(getResources().getDrawable(imgId));
         outlays.add(outlay);
 
-        //TODO SaveData to preferences
+        //TODO Zsömi > SaveData to DB
     }
 
 
@@ -122,6 +123,13 @@ public class BaseOutlayFragment extends Fragment {
             holder.tvDate.setText(Formatters.dailyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
             holder.ivIcon.setImageDrawable(item.getImg());
+            holder.rlOutlayComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
+        }
+
+        private int getBackgroundColorByValue(String s) {
+            //TODO Gyuri 3. > Színezés a költségek alapján, valamilyen határok
+            //TODO Gyuri 3. > pl apró 0-2000Ft, kis kiadás = 2000ft-5000Ft, közepes 5000Ft-20000Ft, nagy 20000Ft fölött
+            return R.color.accent;
         }
 
         @Override
@@ -135,7 +143,7 @@ public class BaseOutlayFragment extends Fragment {
             private TextView tvDescription;
             private TextView tvDate;
             private TextView tvValue;
-            private View container;
+            private RelativeLayout rlOutlayComponent;
 
             OutlayHolder(View itemView) {
                 super(itemView);
@@ -143,6 +151,7 @@ public class BaseOutlayFragment extends Fragment {
                 tvDescription = itemView.findViewById(R.id.tvDescription);
                 tvDate = itemView.findViewById(R.id.tvDate);
                 tvValue = itemView.findViewById(R.id.tvValue);
+                rlOutlayComponent = itemView.findViewById(R.id.rlOutlayComponent);
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -154,7 +163,8 @@ public class BaseOutlayFragment extends Fragment {
         }
     }
 
-    //TODO Ehhez létrehozni layoutot illetve betölteni bele az adatokat, hogy lehessen baszogatni.
+    //TODO Gyuri 4. > Layout létrehozása, amibe betöltjük a kiválasztott elem adatait, EditTextekbe, hogy majd lehessen szerkeszteni.
+    //
     public void handleOutlayItem(int pos) {
         Log.e("Selected item:", outlays.get(pos).toString());
     }
