@@ -145,8 +145,9 @@ public class BaseOutlayFragment extends Fragment {
             holder.tvDescription.setText(item.getDescription());
             holder.tvDate.setText(Formatters.monthlyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
-
-            holder.ivIcon.setImageDrawable(item.getImg());
+            String drawableId = type.getSelectedItem().toString().toLowerCase();
+            int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
+            holder.ivIcon.setImageDrawable(getResources().getDrawable(imgId));
             holder.rlOutlayComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
         }
 
