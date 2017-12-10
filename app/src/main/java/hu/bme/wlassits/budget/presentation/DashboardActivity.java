@@ -13,11 +13,13 @@ import android.widget.TextView;
 import com.facebook.AccessToken;
 import com.facebook.login.LoginManager;
 
+import java.util.Calendar;
+
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
+import hu.bme.wlassits.budget.model.Outlay;
 import hu.bme.wlassits.budget.presentation.statistics.StatisticsActivity;
 
-import static hu.bme.wlassits.budget.repository.DbHelper.getOutlayDataFromDb;
 import static hu.bme.wlassits.budget.repository.DbHelper.initDb;
 
 
@@ -46,7 +48,8 @@ public class DashboardActivity extends BaseActivity {
         setUpButtons(this);
 
         initDb();
-        getOutlayDataFromDb();
+//        getOutlayDataFromDb();
+        fillOutlaysWithMockData();
     }
 
 
@@ -92,5 +95,26 @@ public class DashboardActivity extends BaseActivity {
         Log.e(TAG, "exitApplication()");
         LoginManager.getInstance().logOut();
         AccessToken.setCurrentAccessToken(null);
+    }
+
+
+    //TODO Zsömi > Vigyázz! mockolt adatok
+    public void fillOutlaysWithMockData() {
+        Calendar cal = Calendar.getInstance();
+
+        Outlay outlay;
+        for (int i = 0; i < 50; i++) {
+            cal.add(Calendar.DATE, -1);
+
+            outlay = new Outlay();
+
+            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
+            outlay.setValue(i * 500);
+            outlay.setDescription(i + ". napi rántottsajt");
+            outlay.setDate(cal.getTime());
+            outlay.setType(Globals.outlay_types.get(i % Globals.outlay_types.size()));
+            Globals.outlays.add(outlay);
+        }
+
     }
 }

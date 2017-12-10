@@ -31,15 +31,9 @@ import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Income;
-import hu.bme.wlassits.budget.model.Income;
 import hu.bme.wlassits.budget.model.dbmodels.DbEntity;
 
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
-
-/**
- * Created by Adam Varga on 12/9/2017.
- */
-
 
 //TODO Gyuri 6. >  áthozni a BaseIncomeFragment-ből mindent, és Incommal megcsinálni
 
@@ -47,7 +41,7 @@ public class BaseIncomeFragment extends Fragment {
 
     Context context;
     RecyclerView rvContent;
-    IncomeAdapter IncomeAdapter;
+    IncomeAdapter incomeAdapter;
     FloatingActionButton fabAddItem;
     Button newIncomeBtn;
     Button cancelIncomeBtn;
@@ -142,7 +136,7 @@ public class BaseIncomeFragment extends Fragment {
         income.setImg(getResources().getDrawable(imgId));
 
         Globals.incomes.add(income);
-        IncomeAdapter.notifyDataSetChanged();
+        incomeAdapter.notifyDataSetChanged();
 
         saveIncomeToDatabase(income);
     }
@@ -232,8 +226,8 @@ public class BaseIncomeFragment extends Fragment {
 
 
     public void setData(ArrayList<Income> listData) {
-        IncomeAdapter = new IncomeAdapter(listData, context);
-        rvContent.setAdapter(IncomeAdapter);
+        incomeAdapter = new IncomeAdapter(listData, context);
+        rvContent.setAdapter(incomeAdapter);
     }
 
 
