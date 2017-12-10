@@ -5,4 +5,5 @@ package hu.bme.wlassits.budget.presentation.statistics;
  */
 
 public class IncomeStatisticsActivity {
+
 }

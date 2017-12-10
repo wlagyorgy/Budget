@@ -12,25 +12,29 @@
         android:layout_height="wrap_content"
         android:text="Statistics"/>
 
-    <TextView
-        android:layout_width="100dp"
-        android:text="Outlays"
-        android:layout_height="50dp" />
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:id="@+id/tvOutlayStats"
-        />
-    <TextView
-        android:text="Incomes"
-        android:layout_width="100dp"
-        android:layout_height="50dp" />
 
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:id="@+id/tvIncomeStats"
-        />
+    <Button
+        android:id="@+id/btnOutlaysSum"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnOutlay"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/primary_dark"
+        android:text="Outlay Statistics"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnIncomesSum"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnOutlay"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="5dp"
+        android:background="@color/primary_dark"
+        android:text="Income Statistics"
+        android:textColor="@color/white" />
+
 
 
 </LinearLayout>
