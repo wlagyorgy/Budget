@@ -8,4 +8,10 @@ package hu.bme.wlassits.budget.model.dbmodels;
     //TODO Gyuri 1. > Olyan adatbázis objektum létrehozása, amely képes tárolni egy-egy entitást (legyen az income vagy outlay)
     //TODO Gyuri 1. > Ne felejts el figyelni arra, hogy csak primitív típusokat tudsz tárolni!
 public class DbEntity {
+    long FB_id;
+    String type;
+    String description;
+    int value;
+    long Date;
+
 }
