@@ -64,7 +64,7 @@ public class BaseIncomeFragment extends Fragment {
 
 
     //TODO Gyuri 2. >  createDialog(View view) >>  csekkolni, hogy működik-é illetve mezők validálása (pl. nem üres meg ami még eszedbe jut)
-    public void createDialog(View view, Income o) {
+    public void createDialog(View view, Income i) {
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_incomes);
@@ -78,19 +78,19 @@ public class BaseIncomeFragment extends Fragment {
         TextView addOrModify = dialog.findViewById(R.id.tvAddIncome);
       
 
-        if(o == null) {
+        if(i == null) {
             newIncomeBtn.setText("Add");
             addOrModify.setText("Add new Income");
         }
-        if (o != null) {
+        if (i != null) {
             newIncomeBtn.setText("Modify");
             addOrModify.setText("Modify Income");
-            descriptionET.setText(o.getDescription());
-            valueET.setText(String.valueOf(o.getValue()));
-            String typeS = o.getType();
-            for (int i = 0; i < type.getCount(); i++) {
-                if (type.getItemAtPosition(i).toString().equals(typeS)) {
-                    type.setSelection(i);
+            descriptionET.setText(i.getDescription());
+            valueET.setText(String.valueOf(i.getValue()));
+            String typeS = i.getType();
+            for (int k = 0; k < type.getCount(); k++) {
+                if (type.getItemAtPosition(k).toString().equals(typeS)) {
+                    type.setSelection(k);
                 }
             }
         }
@@ -261,16 +261,16 @@ public class BaseIncomeFragment extends Fragment {
         return view;
     }
 
-    public void saveIncomeToDatabase(Income o) {
+    public void saveIncomeToDatabase(Income i) {
 
         Calendar cal = Calendar.getInstance();
         DbEntity dbEntity = new DbEntity();
 
         dbEntity.setDate(cal.getTime());
         dbEntity.setFbId(Globals.user.getFacebookIdentifier());
-        dbEntity.setDescription(o.getDescription());
+        dbEntity.setDescription(i.getDescription());
         dbEntity.setId(database.child("dbEntities").push().getKey());
-        dbEntity.setValue(String.valueOf(o.getValue()));
+        dbEntity.setValue(String.valueOf(i.getValue()));
         dbEntity.setType("teszt");
         database.child("dbEntities").child(dbEntity.getId()).setValue(dbEntity);
 
