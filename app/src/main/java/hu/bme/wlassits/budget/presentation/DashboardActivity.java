@@ -110,7 +110,7 @@ public class DashboardActivity extends BaseActivity {
 
         Outlay outlay;
         for (int i= 0; i< 50;i++){
-            cal.add(Calendar.DAY_OF_YEAR,-i);
+            cal.add(Calendar.DATE,-1);
 
             outlay = new Outlay();
 

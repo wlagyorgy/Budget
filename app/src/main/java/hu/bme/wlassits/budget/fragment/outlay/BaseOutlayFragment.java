@@ -120,7 +120,7 @@ public class BaseOutlayFragment extends Fragment {
             Outlay item = listData.get(position);
 
             holder.tvDescription.setText(item.getDescription());
-            holder.tvDate.setText(Formatters.dailyDateFormat.format(item.getDate()));
+            holder.tvDate.setText(Formatters.monthlyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
             holder.ivIcon.setImageDrawable(item.getImg());
             holder.rlOutlayComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
