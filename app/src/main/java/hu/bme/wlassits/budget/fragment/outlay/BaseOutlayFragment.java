@@ -45,7 +45,7 @@ public class BaseOutlayFragment extends Fragment {
     Button cancelOutlayBtn;
     EditText descriptionET;
     EditText valueET;
-    Spinner type;
+    Spinner spType;
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
@@ -55,8 +55,7 @@ public class BaseOutlayFragment extends Fragment {
     }
 
 
-    //TODO Gyuri 2. >  createDialog(View view) >>  csekkolni, hogy működik-é illetve mezők validálása (pl. nem üres meg ami még eszedbe jut)
-    public void createDialog(View view, Outlay o) {
+    public void createDialog(View view, final Outlay o, final int pos) {
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_outlays);
@@ -66,12 +65,12 @@ public class BaseOutlayFragment extends Fragment {
         cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
         descriptionET = dialog.findViewById(R.id.etOutlayDescription);
         valueET = dialog.findViewById(R.id.etOutlayValue);
-        type = dialog.findViewById(R.id.spOutlayType);
+        spType = dialog.findViewById(R.id.spOutlayType);
         TextView addOrModify = dialog.findViewById(R.id.tvAddOutlay);
         newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
         cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
 
-        if(o == null) {
+        if (o == null) {
             newOutlayBtn.setText("Add");
             addOrModify.setText("Add new outlay");
         }
@@ -81,19 +80,24 @@ public class BaseOutlayFragment extends Fragment {
             descriptionET.setText(o.getDescription());
             valueET.setText(String.valueOf(o.getValue()));
             String typeS = o.getType();
-            for (int i = 0; i < type.getCount(); i++) {
-                if (type.getItemAtPosition(i).toString().equals(typeS)) {
-                    type.setSelection(i);
+            for (int i = 0; i < spType.getCount(); i++) {
+                if (spType.getItemAtPosition(i).toString().equals(typeS)) {
+                    spType.setSelection(i);
                 }
             }
         }
 
-
         newOutlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(isInputInvalid(descriptionET.getText().toString())&& !(isInputInvalid(valueET.getText().toString())))) {
-                    addNewOutlay();
+                if (!(isInputInvalid(descriptionET.getText().toString()) && !(isInputInvalid(valueET.getText().toString())))) {
+
+                    if (o == null) {
+                        addNewOutlay();
+                    } else {
+                        modifyData(pos);
+                    }
+
                     dialog.dismiss();
                 } else {
                     if (isInputInvalid(descriptionET.getText().toString())) {
@@ -120,7 +124,7 @@ public class BaseOutlayFragment extends Fragment {
     }
 
 
-    public boolean isInputInvalid(String s){
+    public boolean isInputInvalid(String s) {
         return s.trim().isEmpty();
 
     }
@@ -130,12 +134,30 @@ public class BaseOutlayFragment extends Fragment {
         outlay.setDate(Calendar.getInstance().getTime());
         outlay.setDescription(descriptionET.getText().toString());
         outlay.setValue(Integer.parseInt(valueET.getText().toString()));
-        String drawableId = type.getSelectedItem().toString().toLowerCase();
+        outlay.setType(spType.getSelectedItem().toString());
+        String drawableId = spType.getSelectedItem().toString().toLowerCase();
         int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
         outlay.setImg(getResources().getDrawable(imgId));
 
         Globals.outlays.add(outlay);
         outlayAdapter.notifyDataSetChanged();
+        rvContent.invalidate();
+
+        saveOutlayToDatabase(outlay);
+    }
+
+    public void modifyData(int pos) {
+        Outlay outlay = new Outlay();
+        outlay.setDate(Globals.outlays.get(pos).getDate());
+        outlay.setDescription(descriptionET.getText().toString());
+        outlay.setValue(Integer.parseInt(valueET.getText().toString()));
+        String drawableId = spType.getSelectedItem().toString().toLowerCase();
+        int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
+        outlay.setImg(getResources().getDrawable(imgId));
+
+        Globals.outlays.set(pos, outlay);
+        outlayAdapter.notifyDataSetChanged();
+        rvContent.invalidate();
 
         saveOutlayToDatabase(outlay);
     }
@@ -147,7 +169,6 @@ public class BaseOutlayFragment extends Fragment {
         private LayoutInflater inflater;
 
         OutlayAdapter(ArrayList<Outlay> listData, Context c) {
-
             this.inflater = LayoutInflater.from(c);
             this.listData = listData;
         }
@@ -167,7 +188,8 @@ public class BaseOutlayFragment extends Fragment {
             holder.tvDate.setText(Formatters.monthlyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
 
-            holder.ivIcon.setImageDrawable(item.getImg());
+            int imgId = getResources().getIdentifier(item.getType().toLowerCase(), "drawable", context.getPackageName());
+            holder.ivIcon.setImageDrawable(getResources().getDrawable(imgId));
             holder.rlOutlayComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
         }
 
@@ -219,7 +241,7 @@ public class BaseOutlayFragment extends Fragment {
     //TODO Gyuri 4. > Layout létrehozása, amibe betöltjük a kiválasztott elem adatait, EditTextekbe, hogy majd lehessen szerkeszteni.
     //
     public void handleOutlayItem(int pos, View v) {
-        createDialog(v, Globals.outlays.get(pos));
+        createDialog(v, Globals.outlays.get(pos), pos);
         Log.e("Selected item:", Globals.outlays.get(pos).toString());
     }
 
@@ -240,12 +262,11 @@ public class BaseOutlayFragment extends Fragment {
         rvContent.addItemDecoration(itemDecor);
         rvContent.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         fabAddItem = view.findViewById(R.id.fabAddOutlayItem);
         fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createDialog(view,null);
+                createDialog(view, null, 0);
             }
         });
 
@@ -255,7 +276,6 @@ public class BaseOutlayFragment extends Fragment {
     }
 
     public void saveOutlayToDatabase(Outlay o) {
-
         Calendar cal = Calendar.getInstance();
         DbEntity dbEntity = new DbEntity();
 
@@ -264,7 +284,7 @@ public class BaseOutlayFragment extends Fragment {
         dbEntity.setDescription(o.getDescription());
         dbEntity.setId(database.child("dbEntities").push().getKey());
         dbEntity.setValue(String.valueOf(o.getValue()));
-        dbEntity.setType("teszt");
+        dbEntity.setType(o.getType());
         database.child("dbEntities").child(dbEntity.getId()).setValue(dbEntity);
 
     }

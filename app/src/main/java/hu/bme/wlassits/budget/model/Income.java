@@ -5,9 +5,8 @@ import android.graphics.drawable.Drawable;
 import java.util.Date;
 
 
-
 public class Income {
-    private int id;
+    private String id;
     private String description;
     private int value;
     private Date date;
@@ -22,23 +21,24 @@ public class Income {
         this.type = type;
     }
 
-    public Income(int id, String description, int value, Date date, Drawable img) {
+    public Income() {
+    }
+
+    public Income(String id, String description, int value, Date date, Drawable img, String type) {
         this.id = id;
         this.description = description;
         this.value = value;
         this.date = date;
         this.img = img;
+        this.type = type;
     }
 
+    public String getId() {
 
-    public Income() {
-    }
-
-    public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

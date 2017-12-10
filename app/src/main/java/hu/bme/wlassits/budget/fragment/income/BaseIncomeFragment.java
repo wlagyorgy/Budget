@@ -47,7 +47,7 @@ public class BaseIncomeFragment extends Fragment {
     Button cancelIncomeBtn;
     EditText descriptionET;
     EditText valueET;
-    Spinner type;
+    Spinner spType;
     DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     @Override
@@ -58,7 +58,7 @@ public class BaseIncomeFragment extends Fragment {
 
 
     //TODO Gyuri 2. >  createDialog(View view) >>  csekkolni, hogy működik-é illetve mezők validálása (pl. nem üres meg ami még eszedbe jut)
-    public void createDialog(View view, Income i) {
+    public void createDialog(View view, final Income i, final int pos) {
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_incomes);
@@ -68,11 +68,11 @@ public class BaseIncomeFragment extends Fragment {
         cancelIncomeBtn = dialog.findViewById(R.id.btnCancelIncome);
         descriptionET = dialog.findViewById(R.id.etIncomeDescription);
         valueET = dialog.findViewById(R.id.etIncomeValue);
-        type = dialog.findViewById(R.id.spIncomeType);
+        spType = dialog.findViewById(R.id.spIncomeType);
         TextView addOrModify = dialog.findViewById(R.id.tvAddIncome);
-      
 
-        if(i == null) {
+
+        if (i == null) {
             newIncomeBtn.setText("Add");
             addOrModify.setText("Add new Income");
         }
@@ -82,9 +82,9 @@ public class BaseIncomeFragment extends Fragment {
             descriptionET.setText(i.getDescription());
             valueET.setText(String.valueOf(i.getValue()));
             String typeS = i.getType();
-            for (int k = 0; k < type.getCount(); k++) {
-                if (type.getItemAtPosition(k).toString().equals(typeS)) {
-                    type.setSelection(k);
+            for (int k = 0; k < spType.getCount(); k++) {
+                if (spType.getItemAtPosition(k).toString().equals(typeS)) {
+                    spType.setSelection(k);
                 }
             }
         }
@@ -93,9 +93,15 @@ public class BaseIncomeFragment extends Fragment {
         newIncomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(isInputInvalid(descriptionET.getText().toString())&& !(isInputInvalid(valueET.getText().toString())))) {
+                if (!(isInputInvalid(descriptionET.getText().toString()) && !(isInputInvalid(valueET.getText().toString())))) {
                     addNewIncome();
+                    if (i == null) {
+                        addNewIncome();
+                    } else {
+                        modifyData(pos);
+                    }
                     dialog.dismiss();
+
                 } else {
                     if (isInputInvalid(descriptionET.getText().toString())) {
                         descriptionET.setHintTextColor(getResources().getColor(R.color.red));
@@ -121,7 +127,7 @@ public class BaseIncomeFragment extends Fragment {
     }
 
 
-    public boolean isInputInvalid(String s){
+    public boolean isInputInvalid(String s) {
         return s.trim().isEmpty();
 
     }
@@ -129,9 +135,10 @@ public class BaseIncomeFragment extends Fragment {
     public void addNewIncome() {
         Income income = new Income();
         income.setDate(Calendar.getInstance().getTime());
+        income.setType(spType.getSelectedItem().toString());
         income.setDescription(descriptionET.getText().toString());
         income.setValue(Integer.parseInt(valueET.getText().toString()));
-        String drawableId = type.getSelectedItem().toString().toLowerCase();
+        String drawableId = spType.getSelectedItem().toString().toLowerCase();
         int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
         income.setImg(getResources().getDrawable(imgId));
 
@@ -139,6 +146,23 @@ public class BaseIncomeFragment extends Fragment {
         incomeAdapter.notifyDataSetChanged();
 
         saveIncomeToDatabase(income);
+    }
+
+
+    public void modifyData(int pos) {
+        Income income = new Income();
+        income.setDate(Globals.outlays.get(pos).getDate());
+        income.setDescription(descriptionET.getText().toString());
+        income.setValue(Integer.parseInt(valueET.getText().toString()));
+        String drawableId = spType.getSelectedItem().toString().toLowerCase();
+        int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
+        income.setImg(getResources().getDrawable(imgId));
+
+        Globals.incomes.set(pos, income);
+        incomeAdapter.notifyDataSetChanged();
+        rvContent.invalidate();
+
+        //saveOutlayToDatabase(outlay);
     }
 
 
@@ -168,7 +192,8 @@ public class BaseIncomeFragment extends Fragment {
             holder.tvDate.setText(Formatters.monthlyDateFormat.format(item.getDate()));
             holder.tvValue.setText(String.valueOf(item.getValue()) + " Ft");
 
-            holder.ivIcon.setImageDrawable(item.getImg());
+            int imgId = getResources().getIdentifier(item.getType().toLowerCase(), "drawable", context.getPackageName());
+            holder.ivIcon.setImageDrawable(getResources().getDrawable(imgId));
             holder.rlIncomeComponent.setBackgroundColor(getBackgroundColorByValue(String.valueOf(item.getValue())));
         }
 
@@ -220,7 +245,7 @@ public class BaseIncomeFragment extends Fragment {
     //TODO Gyuri 4. > Layout létrehozása, amibe betöltjük a kiválasztott elem adatait, EditTextekbe, hogy majd lehessen szerkeszteni.
     //
     public void handleIncomeItem(int pos, View v) {
-        createDialog(v, Globals.incomes.get(pos));
+        createDialog(v, Globals.incomes.get(pos), pos);
         Log.e("Selected item:", Globals.incomes.get(pos).toString());
     }
 
@@ -246,7 +271,7 @@ public class BaseIncomeFragment extends Fragment {
         fabAddItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createDialog(view,null);
+                createDialog(view, null, 0);
             }
         });
 
@@ -265,7 +290,7 @@ public class BaseIncomeFragment extends Fragment {
         dbEntity.setDescription(i.getDescription());
         dbEntity.setId(database.child("dbEntities").push().getKey());
         dbEntity.setValue(String.valueOf(i.getValue()));
-        dbEntity.setType("teszt");
+        dbEntity.setType(i.getType());
         database.child("dbEntities").child(dbEntity.getId()).setValue(dbEntity);
 
     }

@@ -2,15 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <!-- TODO Gyuri 7.> layout megtervezése, miket akarsz rajta mutatni-->
-    <!-- TODO Gyuri 7.> pl 2 textview > income és outlay , chartokkal még ne törődj-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Statistics"/>
+    android:background="@drawable/menu_background_75"
+    android:gravity="center"
+    android:orientation="vertical">
 
 
     <Button
@@ -35,6 +29,10 @@
         android:text="Income Statistics"
         android:textColor="@color/white" />
 
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/chartSummary"
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
 
 
 </LinearLayout>

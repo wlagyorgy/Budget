@@ -17,9 +17,11 @@ import java.util.Calendar;
 
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.model.Globals;
+import hu.bme.wlassits.budget.model.Income;
 import hu.bme.wlassits.budget.model.Outlay;
 import hu.bme.wlassits.budget.presentation.statistics.StatisticsActivity;
 
+import static hu.bme.wlassits.budget.repository.DbHelper.getDataFromDB;
 import static hu.bme.wlassits.budget.repository.DbHelper.initDb;
 
 
@@ -48,8 +50,12 @@ public class DashboardActivity extends BaseActivity {
         setUpButtons(this);
 
         initDb();
-//        getOutlayDataFromDb();
-        fillOutlaysWithMockData();
+        getDataFromDB();
+
+
+        //TODO Zsömi > Vigyázz! mockolt adatok
+       // fillOutlaysWithMockData();
+        //fillIncomesWithMockData();
     }
 
 
@@ -103,7 +109,7 @@ public class DashboardActivity extends BaseActivity {
         Calendar cal = Calendar.getInstance();
 
         Outlay outlay;
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 20; i++) {
             cal.add(Calendar.DATE, -1);
 
             outlay = new Outlay();
@@ -115,6 +121,23 @@ public class DashboardActivity extends BaseActivity {
             outlay.setType(Globals.outlay_types.get(i % Globals.outlay_types.size()));
             Globals.outlays.add(outlay);
         }
+    }
 
+    //TODO Zsömi > Vigyázz! mockolt adatok
+    public void fillIncomesWithMockData() {
+        Calendar cal = Calendar.getInstance();
+
+        Income income;
+        for (int i = 3; i < 20; i++) {
+            income = new Income();
+
+            cal.add(Calendar.DATE, -1);
+            income.setImg(getResources().getDrawable(R.drawable.app_logo));
+            income.setValue(i * 500);
+            income.setDescription(i + ". napi fizetés");
+            income.setDate(cal.getTime());
+            income.setType(Globals.income_types.get(i % Globals.income_types.size()));
+            Globals.incomes.add(income);
+        }
     }
 }
