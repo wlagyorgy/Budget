@@ -101,7 +101,7 @@ public class DashboardActivity extends BaseActivity {
 
 
 
-    //TODO Zsömi > getData from DB
+    //TODO Zsömi > getData from DB [https://firebase.google.com/docs/database/android/read-and-write]
 
 
     //TODO Zsömi > Vigyázz! mockolt adatok

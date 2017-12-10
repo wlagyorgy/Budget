@@ -31,7 +31,7 @@ import hu.bme.wlassits.budget.model.Outlay;
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
 import static hu.bme.wlassits.budget.model.Globals.outlays;
 
-
+//TODO Gyuri 5. > Tesztelni mindent, hogy működik-e
 public class BaseOutlayFragment extends Fragment {
 
     Context context;
@@ -133,6 +133,7 @@ public class BaseOutlayFragment extends Fragment {
         }
 
         @Override
+
         public int getItemCount() {
             return listData.size();
         }
