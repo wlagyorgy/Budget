@@ -57,9 +57,12 @@ public class BaseOutlayFragment extends Fragment {
             final Dialog dialog = new Dialog(view.getContext());
             dialog.setContentView(R.layout.dialog_outlays);
             dialog.setCancelable(false);
+            TextView addormodify = dialog.findViewById(R.id.tvAddOutlay);
             newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
             cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
         if(o == null) {
+            newOutlayBtn.setText("Add");
+            addormodify.setText("Add new outlay");
             descriptionET = dialog.findViewById(R.id.etOutlayDescription);
             valueET = dialog.findViewById(R.id.etOutlayValue);
             type = dialog.findViewById(R.id.spOutlayType);
@@ -67,6 +70,8 @@ public class BaseOutlayFragment extends Fragment {
         }
         else
         {
+            newOutlayBtn.setText("Modify");
+            addormodify.setText("Edit outlay");
             descriptionET.setText(o.getDescription());
             valueET.setText(o.getValue());
             String typeS = o.getType().toString();
