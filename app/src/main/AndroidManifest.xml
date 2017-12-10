@@ -18,8 +18,9 @@
             android:value="@string/facebook_app_id" />
 
 
-
-        <activity android:name=".presentation.LoginActivity">
+        <activity
+            android:name=".presentation.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,10 +28,22 @@
         </activity>
 
 
-        <activity android:name=".presentation.DashboardActivity" />
-        <activity android:name=".presentation.OutlaysActivity" />
-        <activity android:name=".presentation.IncomesActivity" />
-        <activity android:name=".presentation.StatisticsActivity" />
+        <activity
+            android:name=".presentation.DashboardActivity"
+            android:screenOrientation="portrait"
+
+            />
+        <activity
+            android:name=".presentation.OutlaysActivity"
+            android:screenOrientation="portrait"
+
+            />
+        <activity
+            android:name=".presentation.IncomesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".presentation.StatisticsActivity"
+            android:screenOrientation="portrait" />
 
 
     </application>

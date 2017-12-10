@@ -12,13 +12,13 @@ public class Income {
     private int value;
     private Date date;
     private Drawable img;
-    private IncomeType type;
+    private String type;
 
-    public IncomeType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(IncomeType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

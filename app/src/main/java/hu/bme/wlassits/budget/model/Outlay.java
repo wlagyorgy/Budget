@@ -11,13 +11,13 @@ public class Outlay {
     private int value;
     private Date date;
     private Drawable img;
-    private OutlayType type;
+    private String type;
 
-    public OutlayType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(OutlayType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
