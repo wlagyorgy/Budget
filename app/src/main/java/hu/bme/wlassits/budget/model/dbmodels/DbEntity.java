@@ -1,5 +1,7 @@
 package hu.bme.wlassits.budget.model.dbmodels;
 
+import android.graphics.drawable.Drawable;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.Date;
@@ -17,6 +19,7 @@ public class DbEntity {
   private String description;
   private String value;
   private Date date;
+
 
     public DbEntity() {
     }

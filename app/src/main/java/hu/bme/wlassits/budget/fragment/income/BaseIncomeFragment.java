@@ -282,16 +282,6 @@ public class BaseIncomeFragment extends Fragment {
 
     public void saveIncomeToDatabase(Income i) {
 
-        Calendar cal = Calendar.getInstance();
-        DbEntity dbEntity = new DbEntity();
-
-        dbEntity.setDate(cal.getTime());
-        dbEntity.setFbId(Globals.user.getFacebookIdentifier());
-        dbEntity.setDescription(i.getDescription());
-        dbEntity.setId(database.child("dbEntities").push().getKey());
-        dbEntity.setValue(String.valueOf(i.getValue()));
-        dbEntity.setType(i.getType());
-        database.child("dbEntities").child(dbEntity.getId()).setValue(dbEntity);
 
     }
 

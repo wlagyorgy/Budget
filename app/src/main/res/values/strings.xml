@@ -22,4 +22,15 @@
     <string name="incomeitemicon">IncomeItemIcon</string>
     <string name="outlays">OUTLAYS</string>
     <string name="incomes">INCOMES</string>
+    <string name="in_huf">In HUF.</string>
+    <string name="price">Price</string>
+    <string name="description">Describe the item.</string>
+    <string name="description_header">Description</string>
+    <string name="type">Type</string>
+    <string name="add_outlay">Add</string>
+    <string name="add_new_outlay_dialog_header">Add new outlay</string>
+    <string name="modify">Modify</string>
+    <string name="modify_outlay_dialog_header">Modify outlay</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
 </resources>

@@ -36,37 +36,52 @@ public class StatisticsActivity extends BaseActivity {
         outlaysSumBtn = findViewById(R.id.btnOutlaysSum);
         incomesSumBtn = findViewById(R.id.btnIncomesSum);
         chartSummary = findViewById(R.id.chartSummary);
-        outlaysSumBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), OutlaysStatisticsActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        incomesSumBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), IncomeStatisticsActivity.class);
-                startActivity(intent);
-            }
 
-        });
-        initSummaryDiagram();
+        long outlaysSum = countOutlays();
+        long incomesSum = countIncomes();
+
+        //Ha van már adat kiadásról, akkor legyen kattintható a gomb, ekkor színnel jelöljük is.
+        //Zöld > kattintható ; Szürke > nem kattintható.
+        if (outlaysSum != 0) {
+            outlaysSumBtn.setClickable(true);
+            outlaysSumBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
+            outlaysSumBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getBaseContext(), OutlaysStatisticsActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            outlaysSumBtn.setClickable(false);
+            outlaysSumBtn.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
+
+        //Ha van már adat bevételről, akkor legyen kattintható a gomb, ekkor színnel jelöljük is.
+        //Zöld > kattintható ; Szürke > nem kattintható.
+        if (incomesSum != 0) {
+            incomesSumBtn.setClickable(true);
+            incomesSumBtn.setBackgroundColor(getResources().getColor(R.color.primary_dark));
+            incomesSumBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getBaseContext(), IncomeStatisticsActivity.class);
+                    startActivity(intent);
+                }
+
+            });
+        } else {
+            incomesSumBtn.setClickable(false);
+            incomesSumBtn.setBackgroundColor(getResources().getColor(R.color.gray));
+        }
+
+
+        initSummaryDiagram(outlaysSum, incomesSum);
     }
 
 
-    private void initSummaryDiagram() {
-        long outlaysSum = 0;
-        long incomesSum = 0;
-
-        for (int i = 0; i < outlays.size(); i++) {
-            outlaysSum += outlays.get(i).getValue();
-        }
-        for (int i = 0; i < incomes.size(); i++) {
-            incomesSum += incomes.get(i).getValue();
-        }
-
+    private void initSummaryDiagram(long outlaysSum, long incomesSum) {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         if (incomesSum != 0)
@@ -93,6 +108,22 @@ public class StatisticsActivity extends BaseActivity {
         } else {
             chartSummary.setVisibility(View.GONE);
         }
+    }
+
+    public long countOutlays() {
+        long outlaysSum = 0;
+        for (int i = 0; i < outlays.size(); i++) {
+            outlaysSum += outlays.get(i).getValue();
+        }
+        return outlaysSum;
+    }
+
+    public long countIncomes() {
+        long incomesSum = 0;
+        for (int i = 0; i < incomes.size(); i++) {
+            incomesSum += incomes.get(i).getValue();
+        }
+        return incomesSum;
     }
 
 }

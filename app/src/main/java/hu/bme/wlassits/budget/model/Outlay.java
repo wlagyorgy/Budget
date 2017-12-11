@@ -61,6 +61,16 @@ public class Outlay {
         this.img = img;
     }
 
+    public Outlay(String id, String description, int value, Date date, String type) {
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        this.date = date;
+        this.type = type;
+    }
+
+    public Outlay() {
+    }
 
     @Override
     public String toString() {

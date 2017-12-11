@@ -5,13 +5,20 @@
     android:layout_gravity="center_horizontal"
     android:orientation="vertical">
 
+
     <TextView
+        android:id="@+id/tvAddOutlay"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="20sp"
-        android:id="@+id/tvAddOutlay"
-        />
+        android:layout_marginTop="25dp"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/type" />
 
     <Spinner
         android:id="@+id/spOutlayType"
@@ -24,29 +31,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Description" />
+        android:text="@string/description_header" />
 
     <EditText
         android:id="@+id/etOutlayDescription"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:hint="Describe the item."
-        />
+        android:hint="@string/description" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Price" />
+        android:text="@string/price" />
 
     <EditText
         android:id="@+id/etOutlayValue"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:inputType="number"
-        android:hint="In HUF."/>
+        android:hint="@string/in_huf"
+        android:inputType="number" />
 
 
     <LinearLayout
@@ -58,16 +64,26 @@
             android:id="@+id/btnNewOutlay"
             android:layout_width="100dp"
             android:layout_height="50dp"
+            android:layout_marginBottom="25dp"
+            android:layout_marginEnd="35dp"
             android:background="@color/colorAccent"
-            android:textColor="@color/white"
-            android:layout_marginRight="35dp"/>
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/btnCancelOutlay"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="Cancel"
             android:background="@color/accent"
-            android:textColor="@color/white"/>
+            android:text="@string/btn_cancel"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:background="@color/red"
+            android:text="@string/btn_delete"
+            android:textColor="@color/white" />
+
     </LinearLayout>
 </LinearLayout>

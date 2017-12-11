@@ -1,8 +1,10 @@
 package hu.bme.wlassits.budget.fragment.outlay;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,65 +22,79 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import de.greenrobot.event.EventBus;
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Outlay;
-import hu.bme.wlassits.budget.model.dbmodels.DbEntity;
+import hu.bme.wlassits.budget.model.event.DatabaseChangedEvent;
+import hu.bme.wlassits.budget.repository.DbHelper;
 
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
 
-//TODO Gyuri 5. > Tesztelni mindent, hogy működik-e
 public class BaseOutlayFragment extends Fragment {
 
     Context context;
     RecyclerView rvContent;
     OutlayAdapter outlayAdapter;
     FloatingActionButton fabAddItem;
-    Button newOutlayBtn;
-    Button cancelOutlayBtn;
-    EditText descriptionET;
-    EditText valueET;
+    Button btnAdd;
+    Button btnCancel;
+    Button btnDelete;
+    EditText etDescription;
+    EditText etValue;
     Spinner spType;
-    DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    TextView tvAddOrModify;
+
+    private static String TAG = "BaseOutlayFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        EventBus.getDefault().register(this);
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void createDialog(View view, final Outlay o, final int pos) {
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_outlays);
         dialog.setCancelable(false);
 
-        newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
-        cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
-        descriptionET = dialog.findViewById(R.id.etOutlayDescription);
-        valueET = dialog.findViewById(R.id.etOutlayValue);
+        //Buttons
+        btnAdd = dialog.findViewById(R.id.btnNewOutlay);
+        btnCancel = dialog.findViewById(R.id.btnCancelOutlay);
+        btnDelete = dialog.findViewById(R.id.btnDelete);
+        //Texts
+        etDescription = dialog.findViewById(R.id.etOutlayDescription);
+        etValue = dialog.findViewById(R.id.etOutlayValue);
+        tvAddOrModify = dialog.findViewById(R.id.tvAddOutlay);
+        //Spinner to choose type
         spType = dialog.findViewById(R.id.spOutlayType);
-        TextView addOrModify = dialog.findViewById(R.id.tvAddOutlay);
-        newOutlayBtn = dialog.findViewById(R.id.btnNewOutlay);
-        cancelOutlayBtn = dialog.findViewById(R.id.btnCancelOutlay);
+
 
         if (o == null) {
-            newOutlayBtn.setText("Add");
-            addOrModify.setText("Add new outlay");
+            btnAdd.setText(R.string.add_outlay);
+            //A Cancel legyen látható, a Delete pedig ne
+            btnCancel.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.GONE);
+            tvAddOrModify.setText(R.string.add_new_outlay_dialog_header);
         }
         if (o != null) {
-            newOutlayBtn.setText("Modify");
-            addOrModify.setText("Modify outlay");
-            descriptionET.setText(o.getDescription());
-            valueET.setText(String.valueOf(o.getValue()));
+
+            btnAdd.setText(R.string.modify);
+            //A Delete legyen látható, a Cancel pedig ne
+            btnCancel.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.VISIBLE);
+            tvAddOrModify.setText(R.string.modify_outlay_dialog_header);
+            etDescription.setText(o.getDescription());
+            etValue.setText(String.valueOf(o.getValue()));
+
             String typeS = o.getType();
             for (int i = 0; i < spType.getCount(); i++) {
                 if (spType.getItemAtPosition(i).toString().equals(typeS)) {
@@ -87,35 +103,43 @@ public class BaseOutlayFragment extends Fragment {
             }
         }
 
-        newOutlayBtn.setOnClickListener(new View.OnClickListener() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(isInputInvalid(descriptionET.getText().toString()) && !(isInputInvalid(valueET.getText().toString())))) {
+                if (!(isInputInvalid(etDescription.getText().toString()) && !(isInputInvalid(etValue.getText().toString())))) {
 
                     if (o == null) {
                         addNewOutlay();
                     } else {
-                        modifyData(pos);
+                        modifyOutlay(o);
                     }
 
                     dialog.dismiss();
                 } else {
-                    if (isInputInvalid(descriptionET.getText().toString())) {
-                        descriptionET.setHintTextColor(getResources().getColor(R.color.red));
-                        descriptionET.setHint("This field can't be empty");
+                    if (isInputInvalid(etDescription.getText().toString())) {
+                        etDescription.setHintTextColor(getResources().getColor(R.color.red));
+                        etDescription.setHint("This field can't be empty");
                     }
-                    if (isInputInvalid(valueET.getText().toString())) {
-                        valueET.setHintTextColor(getResources().getColor(R.color.red));
-                        valueET.setHint("This field can't be empty!");
+                    if (isInputInvalid(etValue.getText().toString())) {
+                        etValue.setHintTextColor(getResources().getColor(R.color.red));
+                        etValue.setHint("This field can't be empty!");
                     }
                 }
             }
         });
 
 
-        cancelOutlayBtn.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteOutlay(o);
                 dialog.dismiss();
             }
         });
@@ -123,43 +147,43 @@ public class BaseOutlayFragment extends Fragment {
         dialog.show();
     }
 
+    private void deleteOutlay(Outlay o) {
+        DbHelper.removeItemFromDatabase(o);
+    }
+
 
     public boolean isInputInvalid(String s) {
         return s.trim().isEmpty();
-
     }
 
     public void addNewOutlay() {
         Outlay outlay = new Outlay();
         outlay.setDate(Calendar.getInstance().getTime());
-        outlay.setDescription(descriptionET.getText().toString());
-        outlay.setValue(Integer.parseInt(valueET.getText().toString()));
+        outlay.setDescription(etDescription.getText().toString());
+        outlay.setValue(Integer.parseInt(etValue.getText().toString()));
+        outlay.setType(spType.getSelectedItem().toString());
+        String drawableId = spType.getSelectedItem().toString().toLowerCase();
+        outlay.setId(DbHelper.database.child("dbEntities").push().getKey());
+        int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
+        outlay.setImg(getResources().getDrawable(imgId));
+
+
+        DbHelper.addItemToDatabase(outlay);
+    }
+
+    public void modifyOutlay(Outlay o) {
+        Outlay outlay = new Outlay();
+
+        outlay.setDate(o.getDate());
+        outlay.setId(o.getId());
+        outlay.setDescription(etDescription.getText().toString());
+        outlay.setValue(Integer.parseInt(etValue.getText().toString()));
         outlay.setType(spType.getSelectedItem().toString());
         String drawableId = spType.getSelectedItem().toString().toLowerCase();
         int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
         outlay.setImg(getResources().getDrawable(imgId));
 
-        Globals.outlays.add(outlay);
-        outlayAdapter.notifyDataSetChanged();
-        rvContent.invalidate();
-
-        saveOutlayToDatabase(outlay);
-    }
-
-    public void modifyData(int pos) {
-        Outlay outlay = new Outlay();
-        outlay.setDate(Globals.outlays.get(pos).getDate());
-        outlay.setDescription(descriptionET.getText().toString());
-        outlay.setValue(Integer.parseInt(valueET.getText().toString()));
-        String drawableId = spType.getSelectedItem().toString().toLowerCase();
-        int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
-        outlay.setImg(getResources().getDrawable(imgId));
-
-        Globals.outlays.set(pos, outlay);
-        outlayAdapter.notifyDataSetChanged();
-        rvContent.invalidate();
-
-        saveOutlayToDatabase(outlay);
+        DbHelper.updateItemInDatabase(outlay);
     }
 
 
@@ -238,11 +262,8 @@ public class BaseOutlayFragment extends Fragment {
         }
     }
 
-    //TODO Gyuri 4. > Layout létrehozása, amibe betöltjük a kiválasztott elem adatait, EditTextekbe, hogy majd lehessen szerkeszteni.
-    //
     public void handleOutlayItem(int pos, View v) {
         createDialog(v, Globals.outlays.get(pos), pos);
-        Log.e("Selected item:", Globals.outlays.get(pos).toString());
     }
 
 
@@ -253,9 +274,10 @@ public class BaseOutlayFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_outlays, container, false);
 
+        //Egyes komponensek közötti elválasztóvonal a recycleview-nál
         DividerItemDecoration itemDecor = new DividerItemDecoration(context, HORIZONTAL);
 
         rvContent = view.findViewById(R.id.rvContent);
@@ -275,18 +297,11 @@ public class BaseOutlayFragment extends Fragment {
         return view;
     }
 
-    public void saveOutlayToDatabase(Outlay o) {
-        Calendar cal = Calendar.getInstance();
-        DbEntity dbEntity = new DbEntity();
-
-        dbEntity.setDate(cal.getTime());
-        dbEntity.setFbId(Globals.user.getFacebookIdentifier());
-        dbEntity.setDescription(o.getDescription());
-        dbEntity.setId(database.child("dbEntities").push().getKey());
-        dbEntity.setValue(String.valueOf(o.getValue()));
-        dbEntity.setType(o.getType());
-        database.child("dbEntities").child(dbEntity.getId()).setValue(dbEntity);
-
+    // This method will be called when a DatabaseChangedEvent is posted
+    public void onEventMainThread(DatabaseChangedEvent event){
+        outlayAdapter = new OutlayAdapter(Globals.outlays,context);
+        rvContent.setAdapter(outlayAdapter);
+        Log.e(TAG,"DatabaseChangedEvent");
     }
 
 

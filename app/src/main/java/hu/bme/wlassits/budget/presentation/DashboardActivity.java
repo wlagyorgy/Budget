@@ -20,6 +20,7 @@ import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Income;
 import hu.bme.wlassits.budget.model.Outlay;
 import hu.bme.wlassits.budget.presentation.statistics.StatisticsActivity;
+import hu.bme.wlassits.budget.repository.DbHelper;
 
 import static hu.bme.wlassits.budget.repository.DbHelper.getDataFromDB;
 import static hu.bme.wlassits.budget.repository.DbHelper.initDb;
@@ -44,18 +45,10 @@ public class DashboardActivity extends BaseActivity {
         btnOutlay = findViewById(R.id.btnOutlay);
         btnStatistics = findViewById(R.id.btnStatistics);
         btnExit = findViewById(R.id.btnExit);
-        tvName = findViewById(R.id.tvName);
-        tvName.setText(Globals.user.getFirst_name());
 
         setUpButtons(this);
-
         initDb();
-        getDataFromDB();
-
-
-        //TODO Zsömi > Vigyázz! mockolt adatok
-       // fillOutlaysWithMockData();
-        //fillIncomesWithMockData();
+        DbHelper.getDataFromDB();
     }
 
 
@@ -103,41 +96,4 @@ public class DashboardActivity extends BaseActivity {
         AccessToken.setCurrentAccessToken(null);
     }
 
-
-    //TODO Zsömi > Vigyázz! mockolt adatok
-    public void fillOutlaysWithMockData() {
-        Calendar cal = Calendar.getInstance();
-
-        Outlay outlay;
-        for (int i = 0; i < 20; i++) {
-            cal.add(Calendar.DATE, -1);
-
-            outlay = new Outlay();
-
-            outlay.setImg(getResources().getDrawable(R.drawable.app_logo));
-            outlay.setValue(i * 500);
-            outlay.setDescription(i + ". napi rántottsajt");
-            outlay.setDate(cal.getTime());
-            outlay.setType(Globals.outlay_types.get(i % Globals.outlay_types.size()));
-            Globals.outlays.add(outlay);
-        }
-    }
-
-    //TODO Zsömi > Vigyázz! mockolt adatok
-    public void fillIncomesWithMockData() {
-        Calendar cal = Calendar.getInstance();
-
-        Income income;
-        for (int i = 3; i < 20; i++) {
-            income = new Income();
-
-            cal.add(Calendar.DATE, -1);
-            income.setImg(getResources().getDrawable(R.drawable.app_logo));
-            income.setValue(i * 500);
-            income.setDescription(i + ". napi fizetés");
-            income.setDate(cal.getTime());
-            income.setType(Globals.income_types.get(i % Globals.income_types.size()));
-            Globals.incomes.add(income);
-        }
-    }
 }
