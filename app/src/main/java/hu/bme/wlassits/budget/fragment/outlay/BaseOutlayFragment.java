@@ -303,6 +303,4 @@ public class BaseOutlayFragment extends Fragment {
         rvContent.setAdapter(outlayAdapter);
         Log.e(TAG,"DatabaseChangedEvent");
     }
-
-
 }

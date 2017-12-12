@@ -1,9 +1,10 @@
 package hu.bme.wlassits.budget.fragment.income;
 
-
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -21,21 +22,18 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import de.greenrobot.event.EventBus;
 import hu.bme.wlassits.budget.R;
 import hu.bme.wlassits.budget.managers.Formatters;
 import hu.bme.wlassits.budget.model.Globals;
 import hu.bme.wlassits.budget.model.Income;
-import hu.bme.wlassits.budget.model.dbmodels.DbEntity;
+import hu.bme.wlassits.budget.model.event.DatabaseChangedEvent;
+import hu.bme.wlassits.budget.repository.DbHelper;
 
 import static android.support.v7.widget.RecyclerView.HORIZONTAL;
-
-//TODO Gyuri 6. >  áthozni a BaseIncomeFragment-ből mindent, és Incommal megcsinálni
 
 public class BaseIncomeFragment extends Fragment {
 
@@ -43,44 +41,59 @@ public class BaseIncomeFragment extends Fragment {
     RecyclerView rvContent;
     IncomeAdapter incomeAdapter;
     FloatingActionButton fabAddItem;
-    Button newIncomeBtn;
-    Button cancelIncomeBtn;
-    EditText descriptionET;
-    EditText valueET;
+    Button btnAdd;
+    Button btnCancel;
+    Button btnDelete;
+    EditText etDescription;
+    EditText etValue;
     Spinner spType;
-    DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    TextView tvAddOrModify;
+
+    private static String TAG = "BaseIncomeFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+        EventBus.getDefault().register(this);
     }
 
 
-    //TODO Gyuri 2. >  createDialog(View view) >>  csekkolni, hogy működik-é illetve mezők validálása (pl. nem üres meg ami még eszedbe jut)
+    @SuppressLint("SetTextI18n")
     public void createDialog(View view, final Income i, final int pos) {
 
         final Dialog dialog = new Dialog(view.getContext());
         dialog.setContentView(R.layout.dialog_incomes);
         dialog.setCancelable(false);
-
-        newIncomeBtn = dialog.findViewById(R.id.btnNewIncome);
-        cancelIncomeBtn = dialog.findViewById(R.id.btnCancelIncome);
-        descriptionET = dialog.findViewById(R.id.etIncomeDescription);
-        valueET = dialog.findViewById(R.id.etIncomeValue);
+        //Buttons
+        btnAdd = dialog.findViewById(R.id.btnNewIncome);
+        btnCancel = dialog.findViewById(R.id.btnCancelIncome);
+        btnDelete = dialog.findViewById(R.id.btnDelete);
+        //Texts
+        etDescription = dialog.findViewById(R.id.etIncomeDescription);
+        etValue = dialog.findViewById(R.id.etIncomeValue);
+        tvAddOrModify = dialog.findViewById(R.id.tvAddIncome);
+        //Spinner
         spType = dialog.findViewById(R.id.spIncomeType);
-        TextView addOrModify = dialog.findViewById(R.id.tvAddIncome);
+
 
 
         if (i == null) {
-            newIncomeBtn.setText("Add");
-            addOrModify.setText("Add new Income");
+            btnAdd.setText(R.string.add_income);
+            //A Cancel legyen látható, a Delete pedig ne
+            btnCancel.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.GONE);
+            tvAddOrModify.setText(R.string.add_new_income_dialog_header);
         }
         if (i != null) {
-            newIncomeBtn.setText("Modify");
-            addOrModify.setText("Modify Income");
-            descriptionET.setText(i.getDescription());
-            valueET.setText(String.valueOf(i.getValue()));
+            btnAdd.setText(R.string.modify);
+            //A Delete legyen látható, a Cancel pedig ne
+            btnCancel.setVisibility(View.GONE);
+            btnDelete.setVisibility(View.VISIBLE);
+            tvAddOrModify.setText(R.string.modify_income_dialog_header);
+            etDescription.setText(i.getDescription());
+            etValue.setText(String.valueOf(i.getValue()));
+
             String typeS = i.getType();
             for (int k = 0; k < spType.getCount(); k++) {
                 if (spType.getItemAtPosition(k).toString().equals(typeS)) {
@@ -90,42 +103,52 @@ public class BaseIncomeFragment extends Fragment {
         }
 
 
-        newIncomeBtn.setOnClickListener(new View.OnClickListener() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(isInputInvalid(descriptionET.getText().toString()) && !(isInputInvalid(valueET.getText().toString())))) {
-                    addNewIncome();
+                if (!(isInputInvalid(etDescription.getText().toString()) && !(isInputInvalid(etValue.getText().toString())))) {
+
                     if (i == null) {
                         addNewIncome();
                     } else {
-                        modifyData(pos);
+                        modifyIncome(i);
                     }
                     dialog.dismiss();
 
                 } else {
-                    if (isInputInvalid(descriptionET.getText().toString())) {
-                        descriptionET.setHintTextColor(getResources().getColor(R.color.red));
-                        descriptionET.setHint("This field can't be empty");
+                    if (isInputInvalid(etDescription.getText().toString())) {
+                        etDescription.setHintTextColor(getResources().getColor(R.color.red));
+                        etDescription.setHint("This field can't be empty");
                     }
-                    if (isInputInvalid(valueET.getText().toString())) {
-                        valueET.setHintTextColor(getResources().getColor(R.color.red));
-                        valueET.setHint("This field can't be empty!");
+                    if (isInputInvalid(etValue.getText().toString())) {
+                        etValue.setHintTextColor(getResources().getColor(R.color.red));
+                        etValue.setHint("This field can't be empty!");
                     }
                 }
             }
         });
 
 
-        cancelIncomeBtn.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
 
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteIncome(i);
+                dialog.dismiss();
+            }
+        });
+
         dialog.show();
     }
-
+    private void deleteIncome(Income i) {
+        DbHelper.removeItemFromDatabase(i);
+    }
 
     public boolean isInputInvalid(String s) {
         return s.trim().isEmpty();
@@ -136,33 +159,30 @@ public class BaseIncomeFragment extends Fragment {
         Income income = new Income();
         income.setDate(Calendar.getInstance().getTime());
         income.setType(spType.getSelectedItem().toString());
-        income.setDescription(descriptionET.getText().toString());
-        income.setValue(Integer.parseInt(valueET.getText().toString()));
+        income.setDescription(etDescription.getText().toString());
+        income.setValue(Integer.parseInt(etValue.getText().toString()));
         String drawableId = spType.getSelectedItem().toString().toLowerCase();
+        income.setId(DbHelper.database.child("dbEntities").push().getKey());
         int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
         income.setImg(getResources().getDrawable(imgId));
 
-        Globals.incomes.add(income);
-        incomeAdapter.notifyDataSetChanged();
-
-        saveIncomeToDatabase(income);
+        DbHelper.addItemToDatabase(income);
     }
 
 
-    public void modifyData(int pos) {
+    public void modifyIncome(Income i) {
         Income income = new Income();
-        income.setDate(Globals.outlays.get(pos).getDate());
-        income.setDescription(descriptionET.getText().toString());
-        income.setValue(Integer.parseInt(valueET.getText().toString()));
+
+        income.setDate(i.getDate());
+        income.setId(i.getId());
+        income.setDescription(etDescription.getText().toString());
+        income.setValue(Integer.parseInt(etValue.getText().toString()));
+        income.setType(spType.getSelectedItem().toString());
         String drawableId = spType.getSelectedItem().toString().toLowerCase();
         int imgId = getResources().getIdentifier(drawableId, "drawable", context.getPackageName());
         income.setImg(getResources().getDrawable(imgId));
 
-        Globals.incomes.set(pos, income);
-        incomeAdapter.notifyDataSetChanged();
-        rvContent.invalidate();
-
-        //saveOutlayToDatabase(outlay);
+        DbHelper.updateItemInDatabase(income);
     }
 
 
@@ -242,11 +262,9 @@ public class BaseIncomeFragment extends Fragment {
         }
     }
 
-    //TODO Gyuri 4. > Layout létrehozása, amibe betöltjük a kiválasztott elem adatait, EditTextekbe, hogy majd lehessen szerkeszteni.
-    //
+
     public void handleIncomeItem(int pos, View v) {
         createDialog(v, Globals.incomes.get(pos), pos);
-        Log.e("Selected item:", Globals.incomes.get(pos).toString());
     }
 
 
@@ -280,10 +298,9 @@ public class BaseIncomeFragment extends Fragment {
         return view;
     }
 
-    public void saveIncomeToDatabase(Income i) {
-
-
+    public void onEventMainThread(DatabaseChangedEvent event){
+        incomeAdapter = new IncomeAdapter(Globals.incomes,context);
+        rvContent.setAdapter(incomeAdapter);
+        Log.e(TAG,"DatabaseChangedEvent");
     }
-
-
 }

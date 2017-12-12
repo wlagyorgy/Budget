@@ -10,6 +10,7 @@
         <item>House</item>
         <item>Car</item>
         <item>Freetime</item>
+        <item>Travel</item>
     </string-array>
     <string-array name="incometypes">
         <item>Creditcard</item>
@@ -28,9 +29,12 @@
     <string name="description_header">Description</string>
     <string name="type">Type</string>
     <string name="add_outlay">Add</string>
+    <string name="add_income">Add</string>
     <string name="add_new_outlay_dialog_header">Add new outlay</string>
+    <string name="add_new_income_dialog_header">Add new income</string>
     <string name="modify">Modify</string>
     <string name="modify_outlay_dialog_header">Modify outlay</string>
+    <string name="modify_income_dialog_header">Modify income</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
 </resources>
